@@ -13,18 +13,23 @@ library(here)
 help(package = "TSP")
 
 # Download the image
-urlfile="http://ereaderbackgrounds.com/movies/bw/Frankenstein.jpg"
-
-file="frankenstein.jpg"
-if (!file.exists(file)) download.file(urlfile, destfile = file, mode = 'wb')
+# urlfile <- "https://images.pexels.com/photos/57905/pexels-photo-57905.jpeg?auto=compress&cs=tinysrgb&h=350"
+# 
+# file="rose.jpg"
+# if (!file.exists(file)){
+#     download.file(urlfile, 
+#                   destfile = file,
+#                   mode = 'wb')  
+# } 
 
 # Load, convert to grayscale, filter image (to convert it to bw) and sample
-data <- load.image(file) %>% 
-  grayscale() %>%
-  threshold("45%") %>% 
+data <- load.image(here("data", 
+                        "2018-07-15_hello.png")) %>% 
+  grayscale() %>%  # todo: how to convert to 3-channel image before grayscaling??
+  threshold("45%") %>%
   as.cimg() %>% 
   as.data.frame()  %>% 
-  sample_n(8000, weight=(1-value)) %>% 
+  sample_n(15000, weight=(1-value)) %>% 
   select(x,y) 
 
 # result: 
@@ -45,6 +50,9 @@ ggplot(data_to_plot, aes(x,y)) +
     scale_y_continuous(trans=reverse_trans())+
     coord_fixed()+
     theme_void()
+
+
+
 
 # Do you like the result? Save it! (Change the filename if you want)
 ggsave(here("output", "frankyTSP.png"),
